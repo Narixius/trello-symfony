@@ -23,7 +23,7 @@ docker-sync-stack start
 ```
 Frontend
 ```bash
-yarn dev
+yarn dev-server
 ```
 
 ### Details
