@@ -15,16 +15,17 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class UserController extends AbstractController
+class AuthController extends AbstractController
 {
     #[Route(path: '/login', name: 'app_login')]
-    public function login(InertiaInterface $inertia): Response
+    public function login(InertiaInterface $inertia, Request $request, SecurityAuthenticator $authenticator): Response
     {
         $user = $this->getUser();
         if($user){
             return $this->redirectToRoute('app_dashboard');
         }
-        return $inertia->render('Login', []);
+
+        return $inertia->render('Login');
     }
 
     #[Route(path: '/register', name: 'app_register')]

@@ -18,10 +18,12 @@ security:
             provider: app_user_provider
             logout:
                 path: app_logout
+                target: app_login
             json_login:
                 check_path: /login
-            custom_authenticator:
-                - App\Security\SecurityAuthenticator
+                failure_handler: App\Security\SecurityAuthenticator
+#            custom_authenticator:
+#                - App\Security\SecurityAuthenticator
 
             # where to redirect after logout
             # target: app_any_route

@@ -2,6 +2,7 @@ import * as React from 'react'
 import { createInertiaApp } from '@inertiajs/inertia-react'
 import { createRoot } from 'react-dom/client';
 import './tailwind.css'
+import './app.css'
 
 const container = document.getElementById('app');
 const root = createRoot(container!);
