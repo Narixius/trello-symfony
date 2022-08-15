@@ -12,9 +12,7 @@ syncs:
             - ".docker"
             - ".git"
             - "var"
-            - "vendor"
         watch_excludes:
             - ".docker"
             - ".git"
             - "var"
-            - "vendor"

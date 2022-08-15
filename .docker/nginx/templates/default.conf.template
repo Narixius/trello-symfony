@@ -27,6 +27,11 @@ server {
         include fastcgi_params;
         fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
         fastcgi_param DOCUMENT_ROOT $realpath_root;
+        proxy_buffer_size           128k;
+        proxy_buffers               4 256k;
+        proxy_busy_buffers_size     256k;
+        fastcgi_buffers             16 16k;
+        fastcgi_buffer_size         32k;
         internal;
     }
     location ~ \.php$ {
@@ -35,4 +40,5 @@ server {
 
     error_log /dev/stdout info;
     access_log /var/log/nginx/project_access.log;
+
 }

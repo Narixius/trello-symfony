@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class InertiaController extends AbstractController
 {
-    #[Route('/inertia', name: 'app_inertia')]
+    #[Route('/inertia', name: 'app_dashboard')]
     public function index(InertiaInterface $inertia, Request $request): Response
     {
         return $inertia->render('Dashboard', $request->request->all());
@@ -20,6 +20,6 @@ class InertiaController extends AbstractController
     #[Route('/inertia/create', methods: ['POST'])]
     public function create(InertiaInterface $inertia, Request $request): Response
     {
-        return $this->redirectToRoute('app_inertia');
+        return $this->redirectToRoute('app_dashboard');
     }
 }
