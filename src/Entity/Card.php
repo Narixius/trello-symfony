@@ -6,8 +6,10 @@ use App\Repository\CardRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: CardRepository::class)]
+#[Gedmo\SoftDeleteable(fieldName: 'deletedAt', timeAware: false, hardDelete: true)]
 class Card
 {
     #[ORM\Id]
@@ -22,11 +24,11 @@ class Card
     private $description;
 
     #[ORM\Column(type: 'datetime', nullable: true)]
-    private $due_date;
+    private $dueDate;
 
     #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'cards')]
     #[ORM\JoinColumn(nullable: false)]
-    private $list_id;
+    private $categoryId;
 
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'cards')]
     private $assignees;
@@ -34,8 +36,28 @@ class Card
     #[ORM\ManyToMany(targetEntity: Label::class, mappedBy: 'cards')]
     private $labels;
 
-    #[ORM\OneToMany(mappedBy: 'card_id', targetEntity: Comment::class)]
+    #[ORM\OneToMany(mappedBy: 'cardId', targetEntity: Comment::class)]
     private $comments;
+
+    #[ORM\Column(type: 'datetime_immutable')]
+    #[Gedmo\Timestampable(on: 'create')]
+    private $createdAt;
+
+    #[ORM\Column(type: 'datetime_immutable')]
+    #[Gedmo\Timestampable]
+    private $updatedAt;
+
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'createdCards')]
+    #[ORM\JoinColumn(nullable: false)]
+    #[Gedmo\Blameable(on: 'create')]
+    private $createdBy;
+
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[Gedmo\Blameable(on: 'update')]
+    private $updatedBy;
+
+    #[ORM\Column(type: 'datetime_immutable', nullable: true)]
+    private $deletedAt;
 
 
     public function __construct()
@@ -76,24 +98,24 @@ class Card
 
     public function getDueDate(): ?\DateTimeInterface
     {
-        return $this->due_date;
+        return $this->dueDate;
     }
 
-    public function setDueDate(?\DateTimeInterface $due_date): self
+    public function setDueDate(?\DateTimeInterface $dueDate): self
     {
-        $this->due_date = $due_date;
+        $this->dueDate = $dueDate;
 
         return $this;
     }
 
-    public function getListId(): ?Category
+    public function getCategoryId(): ?Category
     {
-        return $this->list_id;
+        return $this->categoryId;
     }
 
-    public function setListId(?Category $list_id): self
+    public function setCategoryId(?Category $categoryId): self
     {
-        $this->list_id = $list_id;
+        $this->categoryId = $categoryId;
 
         return $this;
     }
@@ -175,6 +197,66 @@ class Card
                 $comment->setCardId(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeImmutable $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeImmutable
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(\DateTimeImmutable $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getCreatedBy(): ?User
+    {
+        return $this->createdBy;
+    }
+
+    public function setCreatedBy(?User $createdBy): self
+    {
+        $this->createdBy = $createdBy;
+
+        return $this;
+    }
+
+    public function getUpdatedBy(): ?User
+    {
+        return $this->updatedBy;
+    }
+
+    public function setUpdatedBy(?User $updatedBy): self
+    {
+        $this->updatedBy = $updatedBy;
+
+        return $this;
+    }
+
+    public function getDeletedAt(): ?\DateTimeImmutable
+    {
+        return $this->deletedAt;
+    }
+
+    public function setDeletedAt(?\DateTimeImmutable $deletedAt): self
+    {
+        $this->deletedAt = $deletedAt;
 
         return $this;
     }

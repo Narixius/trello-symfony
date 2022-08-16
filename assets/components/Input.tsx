@@ -6,7 +6,7 @@ export default function Input({
         error=false,
         ...rest
     }) {
-    return <div className={"flex flex-col space-y-2"}>
+    return <div className={"flex flex-col space-y-1"}>
         <input
             type={type}
             {...rest}
@@ -17,7 +17,7 @@ export default function Input({
                     "border-red-500 hover:border-red-500": error
                 })}
         />
-        {error && <span className={"text-red-500"}>
+        {error && <span className={"text-red-500 text-sm"}>
             {error}
         </span>}
     </div>
