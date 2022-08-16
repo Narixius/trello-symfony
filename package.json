@@ -4,6 +4,7 @@
         "@hotwired/stimulus": "^3.0.0",
         "@symfony/stimulus-bridge": "^3.2.0",
         "@symfony/webpack-encore": "^3.0.0",
+        "@types/react-color": "^3.0.6",
         "@types/react-dom": "^18.0.6",
         "autoprefixer": "^10.4.8",
         "core-js": "^3.23.0",
@@ -29,6 +30,7 @@
         "@inertiajs/inertia": "^0.11.0",
         "@inertiajs/inertia-react": "^0.8.0",
         "classnames": "^2.3.1",
+        "dayjs": "^1.11.5",
         "react": "^18.2.0",
         "react-dom": "^18.2.0"
     }

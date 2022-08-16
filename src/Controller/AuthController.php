@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Form\UserType;
 use App\Repository\UserRepository;
 use App\Security\SecurityAuthenticator;
+use App\Services\ErrorGenerator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,6 +31,7 @@ class AuthController extends AbstractController
 
     #[Route(path: '/register', name: 'app_register')]
     public function register(ValidatorInterface $validator,
+                             ErrorGenerator $eg,
                              Request $request,
                              UserRepository $userRepository,
                              InertiaInterface $inertia,
@@ -45,7 +47,8 @@ class AuthController extends AbstractController
             $form->submit($payload);
             $errors = $validator->validate($user);
             if (count($errors) > 0) {
-                return $inertia->render('Register', ['errors'=>$errors]);
+
+                return $inertia->render('Register', ['errors'=>$eg->fromValidation($errors)]);
             }
             if ($form->isSubmitted() && $form->isValid()) {
                 $user->setPassword($passwordHasher->hashPassword(

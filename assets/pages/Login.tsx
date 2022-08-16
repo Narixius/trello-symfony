@@ -30,7 +30,7 @@ export default function Login(props:any) {
             <h1 className={"text-2xl font-medium"}>Sign in</h1>
         </div>
         <form onSubmit={handleSubmit} className={"mt-8 flex flex-col  space-y-3"}>
-            <Input autocomplete={"off"} placeholder={"Email"} name="username" />
+            <Input autoComplete={"off"} placeholder={"Email"} name="username" />
             <Input placeholder={"Password"} name="password" type={"password"} />
             {props.error && <div className={"bg-red-200 border border-red-300 my-4 rounded px-2 py-2 text-gray-700"}>
                 {props.error}

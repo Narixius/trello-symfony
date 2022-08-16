@@ -4,34 +4,18 @@ import Logo from "../components/Logo";
 import Input from "../components/Input";
 import Button from "../components/Button";
 import {useEffect, useState} from "react";
-import {Link} from "@inertiajs/inertia-react";
+import {Link, useForm} from "@inertiajs/inertia-react";
 
 export default function Login(props:any) {
-    const [loading, setLoading] = useState(false)
-    useEffect(()=>{
-        Inertia.on('start', (event) => {
-            setLoading(true)
-        })
-        Inertia.on('finish', (event) => {
-            setLoading(false)
-        })
+    const {post, data, setData, processing, errors} = useForm({
+        first_name: "",
+        last_name: "",
+        email: "",
+        password: ""
     })
-    const errors:any = {};
-    if(props.errors){
-       if(props.errors.violations.length > 0){
-           props.errors.violations.map((err:{propertyPath: string, title: string}) => {
-               errors[err.propertyPath] = err.title;
-           })
-       }
-    }
     function handleSubmit(e:any) {
         e.preventDefault()
-        Inertia.post('/register', {
-            first_name: e.target.elements.first_name.value,
-            last_name: e.target.elements.last_name.value,
-            email: e.target.elements.email.value,
-            password: e.target.elements.password.value
-        })
+        post('/register')
     }
     return <div className="bg-[#FDFCFD] mx-auto max-w-[300px] mt-8 pb-5">
         <div className={"flex space-x-2 items-center  mt-1"}>
@@ -39,16 +23,16 @@ export default function Login(props:any) {
             <h1 className={"text-2xl font-medium"}>Registration</h1>
         </div>
         <form onSubmit={handleSubmit} className={"mt-8 flex flex-col  space-y-3"}>
-            <Input autocomplete={"off"} placeholder={"First name"} name="first_name" error={errors.first_name} />
-            <Input autocomplete={"off"} placeholder={"Last name"} name="last_name" error={errors.last_name} />
-            <Input autocomplete={"off"} placeholder={"Email"} name="email" error={errors.email} />
-            <Input placeholder={"Password"} name="password" type={"password"} error={errors.password} />
+            <Input onChange={(e:any)=>setData('first_name', e.target.value)} value={data.first_name} autoComplete={"off"} placeholder={"First name"} name="first_name" error={errors.first_name} />
+            <Input onChange={(e:any)=>setData('last_name', e.target.value)} value={data.last_name} autoComplete={"off"} placeholder={"Last name"} name="last_name" error={errors.last_name} />
+            <Input onChange={(e:any)=>setData('email', e.target.value)} value={data.email} autoComplete={"off"} placeholder={"Email"} name="email" error={errors.email} />
+            <Input onChange={(e:any)=>setData('password', e.target.value)} value={data.password} placeholder={"Password"} name="password" type={"password"} error={errors.password} />
             {props.error && <div className={"bg-red-200 border border-red-300 my-4 rounded px-2 py-2 text-gray-700"}>
                 {props.error}
             </div>}
             <div>
-                <Button disabled={loading} type={"submit"} className={"mt-2 w-full"}>{
-                    loading ? "Loading..." : "Register"
+                <Button disabled={processing} type={"submit"} className={"mt-2 w-full"}>{
+                    processing ? "Loading..." : "Register"
                 }</Button>
             </div>
         </form>
