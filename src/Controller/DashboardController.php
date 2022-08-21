@@ -16,9 +16,10 @@ use Symfony\Component\Security\Core\Security;
 class DashboardController extends AbstractController
 {
     #[Route('/', name: 'app_dashboard')]
-    #[IsGranted("ROLE_USER")]
-    public function index(Request $request, InertiaInterface $inertia, DashboardData $dashboardData): Response
+    public function index(Request $request, InertiaInterface $inertia, DashboardData $dashboardData, Security $security): Response
     {
+        if(!$security->getUser())
+            return $this->redirectToRoute("app_login");
         return $inertia->render('Dashboard', $dashboardData->getDashboardData($request));
     }
 

@@ -22,7 +22,7 @@ class Category
 
     #[ORM\ManyToOne(targetEntity: Board::class, inversedBy: 'categories')]
     #[ORM\JoinColumn(nullable: false)]
-    private $boardId;
+    private $board;
 
     #[ORM\OneToMany(mappedBy: 'categoryId', targetEntity: Card::class)]
     private $cards;
@@ -47,6 +47,9 @@ class Category
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private $deletedAt;
 
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private $orderNumber;
+
     public function __construct()
     {
         $this->cards = new ArrayCollection();
@@ -69,14 +72,14 @@ class Category
         return $this;
     }
 
-    public function getBoardId(): ?Board
+    public function getBoard(): ?Board
     {
-        return $this->boardId;
+        return $this->board;
     }
 
-    public function setBoardId(?Board $boardId): self
+    public function setBoard(?Board $board): self
     {
-        $this->boardId = $boardId;
+        $this->board = $board;
 
         return $this;
     }
@@ -167,6 +170,18 @@ class Category
     public function setDeletedAt(?\DateTimeImmutable $deletedAt): self
     {
         $this->deletedAt = $deletedAt;
+
+        return $this;
+    }
+
+    public function getOrderNumber(): ?int
+    {
+        return $this->orderNumber;
+    }
+
+    public function setOrderNumber(int $orderNumber): self
+    {
+        $this->orderNumber = $orderNumber;
 
         return $this;
     }

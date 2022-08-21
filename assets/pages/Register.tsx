@@ -1,9 +1,7 @@
-import { Inertia } from '@inertiajs/inertia'
 import * as React from 'react'
 import Logo from "../components/Logo";
 import Input from "../components/Input";
 import Button from "../components/Button";
-import {useEffect, useState} from "react";
 import {Link, useForm} from "@inertiajs/inertia-react";
 
 export default function Login(props:any) {

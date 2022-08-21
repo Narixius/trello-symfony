@@ -25,7 +25,7 @@ class Board
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $color;
 
-    #[ORM\OneToMany(mappedBy: 'boardId', targetEntity: Category::class)]
+    #[ORM\OneToMany(mappedBy: 'board', targetEntity: Category::class)]
     private $categories;
 
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'boards')]
@@ -102,7 +102,7 @@ class Board
     {
         if (!$this->categories->contains($category)) {
             $this->categories[] = $category;
-            $category->setBoardId($this);
+            $category->setBoard($this);
         }
 
         return $this;
@@ -112,8 +112,8 @@ class Board
     {
         if ($this->categories->removeElement($category)) {
             // set the owning side to null (unless already changed)
-            if ($category->getBoardId() === $this) {
-                $category->setBoardId(null);
+            if ($category->getBoard() === $this) {
+                $category->setBoard(null);
             }
         }
 

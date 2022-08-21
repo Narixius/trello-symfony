@@ -23,16 +23,32 @@ export const BoardCard:React.FC<PropsWithChildren<{
         color: ''
     });
     const editRef = React.useRef() as React.MutableRefObject<HTMLDivElement>;
-    const handleDelete = () => {
+    const handleDelete = (e?:any) => {
+        if(e) {
+            e.preventDefault()
+            e.stopPropagation()
+        }
         setDeleting(true)
     }
-    const cancelDelete = () => {
+    const cancelDelete = (e?:any) => {
+        if(e) {
+            e.preventDefault()
+            e.stopPropagation()
+        }
         setDeleting(false)
     }
-    const deleteBoard = () => {
+    const deleteBoard = (e?:any) => {
+        if(e) {
+            e.preventDefault()
+            e.stopPropagation()
+        }
         Inertia.delete('/board/'+board.id)
     }
-    const handleEditing = () => {
+    const handleEditing = (e?:any) => {
+        if(e) {
+            e.preventDefault()
+            e.stopPropagation()
+        }
         setData({
             title: board.title,
             color: board.color || ""
@@ -64,7 +80,7 @@ export const BoardCard:React.FC<PropsWithChildren<{
             hover:text-gray-700 rounded-md text-gray-700 font-medium cursor-pointer hover:border-[#E6E6E7] transition overflow-hidden">
         {!editing ? <><div className="flex justify-between relative overflow-hidden">
             <span className="truncate w-full block">{board.title}</span>
-            <button onClick={handleDelete} className="bg-opacity-50 bg-mellow transition transform translate-x-full group-hover:translate-x-0 text-gray-400 hover:text-gray-600 hover:bg-gray-200 p-1 rounded-md">
+            <button onClick={handleDelete} className="bg-opacity-50 bg-mellow transition transform translate-x-full group-hover:translate-x-0 text-gray-400 hover:text-red-500 hover:bg-gray-200 p-1 rounded-md">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                 </svg>
@@ -92,17 +108,24 @@ export const BoardCard:React.FC<PropsWithChildren<{
             </div>
         </div>
         </>
-        : <BoardCardForm
-                title={"Create new board"}
-                formRef={editRef}
-                onSubmit={editBoard}
-                onCancel={cancelEditing}
-                errors={errors}
-                data={data}
-                setData={setData}
-                processing={processing}
-                loadingMessage={"Saving..."}
-                submitMessage={"Save"} />}
+        :   <div onClick={e=>{
+                console.log('asdf')
+                e.preventDefault()
+                }
+            }>
+                <BoardCardForm
+                    title={"Create new board"}
+                    formRef={editRef}
+                    onSubmit={editBoard}
+                    onCancel={cancelEditing}
+                    errors={errors}
+                    data={data}
+                    setData={setData}
+                    processing={processing}
+                    loadingMessage={"Saving..."}
+                    submitMessage={"Save"} />
+            </div>
+        }
     </div>
 }
 
@@ -187,7 +210,10 @@ const BoardCardForm:React.FC<any> = ({
             </button>
             <span>{title}</span>
         </div>
-        <Input error={errors.title} small name={"title"} placeholder={"Title"} value={data.title} onChange={(e:any) => setData('title', e.target.value)} />
+        <Input error={errors.title} onClick={
+            // @ts-ignore
+            e=>e.target.focus()
+        } small name={"title"} placeholder={"Title"} value={data.title} onChange={(e:any) => setData('title', e.target.value)} />
         <div className="flex space-x-2 w-full">
             <ColorPicker colors={[
                 '#F8F7F8',
@@ -198,7 +224,7 @@ const BoardCardForm:React.FC<any> = ({
                 '#FFE6BF',
                 '#E9FFBF'
             ]} color={data.color} onChange={(color) => setData('color', color)} />
-            <Button small className={"px-6"} disabled={processing}>{processing ? loadingMessage : submitMessage}</Button>
+            <Button small onClick={onSubmit} className={"px-6"} disabled={processing}>{processing ? loadingMessage : submitMessage}</Button>
         </div>
     </form>
 }

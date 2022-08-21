@@ -6,6 +6,7 @@ import {AddBoardCard, BoardCard} from "../components/BoardCard";
 import {User} from "../types/User";
 import {Navbar} from "../components/Navbar";
 import {Errors} from "../types/Error";
+import {Link} from "@inertiajs/inertia-react";
 
 export default function Dashboard(props:{
     boards: Board[],
@@ -23,7 +24,11 @@ export default function Dashboard(props:{
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mt-8">
               {
                   boards.map((board)=>{
-                    return <BoardCard board={board} key={board.id} />
+                    return <Link href={`/board/${board.id}`} method="get" headers={{
+                        'Content-Type': 'plain/txt'
+                    }}>
+                        <BoardCard board={board} key={board.id} />
+                    </Link>
                   })
               }
               <AddBoardCard />
