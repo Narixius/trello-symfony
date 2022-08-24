@@ -20,7 +20,7 @@ class Card
     #[ORM\Column(type: 'string', length: 255)]
     private $title;
 
-    #[ORM\Column(type: 'string', length: 255)]
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $description;
 
     #[ORM\Column(type: 'datetime', nullable: true)]
@@ -28,7 +28,7 @@ class Card
 
     #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'cards')]
     #[ORM\JoinColumn(nullable: false)]
-    private $categoryId;
+    private $category;
 
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'cards')]
     private $assignees;
@@ -36,7 +36,7 @@ class Card
     #[ORM\ManyToMany(targetEntity: Label::class, mappedBy: 'cards')]
     private $labels;
 
-    #[ORM\OneToMany(mappedBy: 'cardId', targetEntity: Comment::class)]
+    #[ORM\OneToMany(mappedBy: 'cardId', targetEntity: Comment::class, orphanRemoval: true)]
     private $comments;
 
     #[ORM\Column(type: 'datetime_immutable')]
@@ -58,6 +58,9 @@ class Card
 
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private $deletedAt;
+
+    #[ORM\Column(type: 'integer')]
+    private $orderNumber;
 
 
     public function __construct()
@@ -108,14 +111,14 @@ class Card
         return $this;
     }
 
-    public function getCategoryId(): ?Category
+    public function getCategory(): ?Category
     {
-        return $this->categoryId;
+        return $this->category;
     }
 
-    public function setCategoryId(?Category $categoryId): self
+    public function setCategory(?Category $category): self
     {
-        $this->categoryId = $categoryId;
+        $this->category = $category;
 
         return $this;
     }
@@ -257,6 +260,18 @@ class Card
     public function setDeletedAt(?\DateTimeImmutable $deletedAt): self
     {
         $this->deletedAt = $deletedAt;
+
+        return $this;
+    }
+
+    public function getOrderNumber(): ?int
+    {
+        return $this->orderNumber;
+    }
+
+    public function setOrderNumber(int $orderNumber): self
+    {
+        $this->orderNumber = $orderNumber;
 
         return $this;
     }

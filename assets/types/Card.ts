@@ -11,4 +11,6 @@ export type Card = WithTimestamps<WithBlameable<{
     assignees: User[];
     labels: Label[];
     comments: Comment[];
+    orderNumber: number;
+    category?: number;
 }>>

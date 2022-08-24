@@ -12,7 +12,8 @@ export const Editable:React.FC<{
     inputClasses?: string,
     textClasses?: string,
     children: React.ReactNode,
-    value?: string
+    value?: string,
+    onEditing?: (editing:boolean) => void
 }> = (props) => {
     const {
         className,
@@ -22,6 +23,7 @@ export const Editable:React.FC<{
         inputClasses,
         textClasses,
         children,
+        onEditing,
         ...rest
     } = props
 
@@ -35,12 +37,16 @@ export const Editable:React.FC<{
         cancelEditing()
     }
     const enableEditing = () => {
+        if(onEditing)
+            onEditing(true)
         setValue(rest.value || '')
         setEditing(true)
     }
     const cancelEditing = () => {
         setValue('')
         setEditing(false)
+        if(onEditing)
+            onEditing(false)
     }
     useOnClickOutside(ref, cancelEditing)
     useEffect(()=>{

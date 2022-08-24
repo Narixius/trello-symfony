@@ -25,7 +25,7 @@ class Board
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $color;
 
-    #[ORM\OneToMany(mappedBy: 'board', targetEntity: Category::class)]
+    #[ORM\OneToMany(mappedBy: 'board', targetEntity: Category::class, orphanRemoval: true)]
     private $categories;
 
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'boards')]
@@ -51,7 +51,7 @@ class Board
     #[Gedmo\Blameable(on: 'create')]
     private $createdBy;
 
-    #[ORM\OneToMany(mappedBy: 'boardId', targetEntity: Label::class)]
+    #[ORM\OneToMany(mappedBy: 'board', targetEntity: Label::class, orphanRemoval: true)]
     private $labels;
 
     public function __construct()

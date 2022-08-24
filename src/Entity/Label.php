@@ -36,7 +36,7 @@ class Label
 
     #[ORM\ManyToOne(targetEntity: Board::class, inversedBy: 'labels')]
     #[ORM\JoinColumn(nullable: false)]
-    private $boardId;
+    private $board;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'createdLabels')]
     #[ORM\JoinColumn(nullable: false)]

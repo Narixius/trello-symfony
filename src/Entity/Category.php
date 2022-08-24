@@ -24,7 +24,7 @@ class Category
     #[ORM\JoinColumn(nullable: false)]
     private $board;
 
-    #[ORM\OneToMany(mappedBy: 'categoryId', targetEntity: Card::class)]
+    #[ORM\OneToMany(mappedBy: 'category', targetEntity: Card::class, orphanRemoval: true)]
     private $cards;
 
     #[ORM\Column(type: 'datetime_immutable')]
@@ -96,7 +96,7 @@ class Category
     {
         if (!$this->cards->contains($card)) {
             $this->cards[] = $card;
-            $card->setCategoryId($this);
+            $card->setCategory($this);
         }
 
         return $this;
@@ -106,8 +106,8 @@ class Category
     {
         if ($this->cards->removeElement($card)) {
             // set the owning side to null (unless already changed)
-            if ($card->getCategoryId() === $this) {
-                $card->setCategoryId(null);
+            if ($card->getCategory() === $this) {
+                $card->setCategory(null);
             }
         }
 

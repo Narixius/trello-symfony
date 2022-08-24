@@ -54,19 +54,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Gedmo\Timestampable]
     private $updatedAt;
 
-    #[ORM\OneToMany(mappedBy: 'createdBy', targetEntity: Board::class)]
+    #[ORM\OneToMany(mappedBy: 'createdBy', targetEntity: Board::class, orphanRemoval: true)]
     private $createdBoards;
 
-    #[ORM\OneToMany(mappedBy: 'createdBy', targetEntity: Card::class)]
+    #[ORM\OneToMany(mappedBy: 'createdBy', targetEntity: Card::class, orphanRemoval: true)]
     private $createdCards;
 
-    #[ORM\OneToMany(mappedBy: 'createdBy', targetEntity: Category::class)]
+    #[ORM\OneToMany(mappedBy: 'createdBy', targetEntity: Category::class, orphanRemoval: true)]
     private $createdCategories;
 
-    #[ORM\OneToMany(mappedBy: 'createdBy', targetEntity: Comment::class)]
+    #[ORM\OneToMany(mappedBy: 'createdBy', targetEntity: Comment::class, orphanRemoval: true)]
     private $createdComments;
 
-    #[ORM\OneToMany(mappedBy: 'createdBy', targetEntity: Label::class)]
+    #[ORM\OneToMany(mappedBy: 'createdBy', targetEntity: Label::class, orphanRemoval: true)]
     private $createdLabels;
 
     public function __construct()
