@@ -129,6 +129,8 @@ export const CategoryBody:React.FC<{cards: CardType[], category: CategoryType, b
             const c = cards.find(c => c.id === editingCard.id)
             if(c)
                 setEditingCard(c)
+            else
+                setEditingCard(undefined)
         }
     }, [cards])
     return(

@@ -99,6 +99,9 @@ export const CardEdit:React.FC<{card:CardType, onClose: any,  board:Board, user:
     const deleteLabel = (labelId:number) => {
         Inertia.delete("/label/"+labelId)
     }
+    const deleteCard = () => {
+        Inertia.delete("/card/"+card.id)
+    }
 
     if(!Array.isArray(card.comments))
         card.comments = []
@@ -120,11 +123,14 @@ export const CardEdit:React.FC<{card:CardType, onClose: any,  board:Board, user:
                 <Editable value={card.title} onSubmit={submitChanges('title')}>
                     <span className="font-bold">{card.title}</span>
                 </Editable>
-                <button onClick={onClose} className="hover:bg-mellow-darker rounded-md transition text-gray-400 hover:text-gray-500 p-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-5">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 19.5l15-15m-15 0l15 15" />
-                    </svg>
-                </button>
+                <div className="group flex space-x-2">
+                    <DeleteButton translate={false} onDelete={deleteCard} />
+                    <button onClick={onClose} className="hover:bg-mellow-darker rounded-md transition text-gray-400 hover:text-gray-500 p-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-5">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 19.5l15-15m-15 0l15 15" />
+                        </svg>
+                    </button>
+                </div>
             </div>
             <div className="text-gray-500 text-xs mb-4">
                 <span>Last updated {dayjs().from(dayjs(card.updatedAt))}, created by {card.createdBy.firstName + " " + card.createdBy.lastName}, {dayjs().from(dayjs(card.createdAt))}</span>
@@ -192,8 +198,8 @@ export const CardEdit:React.FC<{card:CardType, onClose: any,  board:Board, user:
                                             const isChecked = card.labels.find(l => l.id === label.id);
                                             return <span key={label.id} style={{
                                                 backgroundColor: label.color,
-                                                opacity: isChecked? 1 : 0.2
-                                            }} className="text-xs px-1 rounded-sm w-full flex justify-between"
+                                                opacity: isChecked? 1 : 0.5
+                                            }} className="cursor-pointer text-xs px-1 rounded-sm w-full flex justify-between"
                                              onClick={() => {
                                                  if(!isChecked)
                                                      submitChanges('labels')([...card.labels.map(a=>a.id), label.id])

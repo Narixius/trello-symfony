@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Card;
+use App\Entity\User;
 use App\Form\CardType;
 use App\Repository\CardRepository;
 use App\Services\ErrorGenerator;
@@ -76,6 +77,19 @@ class CardController extends AbstractController
             return $this->redirect($request->headers->get('referer'));
         }
         $cardRepository->add($card, true);
+        return $this->redirect($request->headers->get('referer'));
+    }
+
+    #[Route('/{id}', name: 'app_card_delete', methods: ['DELETE'])]
+    public function delete(int $id, Request $request, ErrorGenerator $eg, Security $security, Card $card, CardRepository $cardRepository): Response
+    {
+        $card = $cardRepository->find($id);
+        if(!$card) {
+            $request->getSession()->set('errors', ['message' => 'Comment not found!']);
+            return $this->redirect($request->headers->get('referer'));
+        }
+        $this->denyAccessUnlessGranted('BOARD_READ', $card->getCategory()->getBoard());
+        $cardRepository->remove($card, true);
         return $this->redirect($request->headers->get('referer'));
     }
 }

@@ -11,6 +11,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Serializer\Annotation\Ignore;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[UniqueEntity('email')]
@@ -43,7 +44,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     private $lastName;
 
-    #[ORM\ManyToMany(targetEntity: Board::class, mappedBy: 'members')]
+    #[ORM\ManyToMany(targetEntity: Board::class, mappedBy: 'members', fetch: 'EXTRA_LAZY')]
     private $boards;
 
     #[ORM\Column(type: 'datetime_immutable')]
@@ -54,19 +55,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Gedmo\Timestampable]
     private $updatedAt;
 
-    #[ORM\OneToMany(mappedBy: 'createdBy', targetEntity: Board::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'createdBy', targetEntity: Board::class, fetch: 'EXTRA_LAZY', orphanRemoval: true)]
+    #[Ignore()]
     private $createdBoards;
 
-    #[ORM\OneToMany(mappedBy: 'createdBy', targetEntity: Card::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'createdBy', targetEntity: Card::class, fetch: 'EXTRA_LAZY', orphanRemoval: true)]
+    #[Ignore()]
     private $createdCards;
 
-    #[ORM\OneToMany(mappedBy: 'createdBy', targetEntity: Category::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'createdBy', targetEntity: Category::class, fetch: 'EXTRA_LAZY', orphanRemoval: true)]
+    #[Ignore()]
     private $createdCategories;
 
-    #[ORM\OneToMany(mappedBy: 'createdBy', targetEntity: Comment::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'createdBy', targetEntity: Comment::class, fetch: 'EXTRA_LAZY', orphanRemoval: true)]
+    #[Ignore()]
     private $createdComments;
 
-    #[ORM\OneToMany(mappedBy: 'createdBy', targetEntity: Label::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'createdBy', targetEntity: Label::class, fetch: 'EXTRA_LAZY', orphanRemoval: true)]
+    #[Ignore()]
     private $createdLabels;
 
     public function __construct()

@@ -99,10 +99,8 @@ class Label
 
     public function addCard(Card $card): self
     {
-        if (!$this->cards->contains($card)) {
-            $this->cards[] = $card;
-        }
-
+        $card->addLabel($this);
+        $this->cards[] = $card;
         return $this;
     }
 

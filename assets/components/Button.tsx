@@ -25,7 +25,7 @@ export default function Button({
     />
 }
 
-export const DeleteButton:FC<{onDelete: any}> = ({onDelete}) => {
+export const DeleteButton:FC<{onDelete: any, translate?: boolean}> = ({onDelete, translate=true}) => {
     const [deleting, setDeleting] = useState(false)
     const deleteRef = useRef() as React.MutableRefObject<HTMLButtonElement>;
     const handleDelete = () => {
@@ -41,9 +41,11 @@ export const DeleteButton:FC<{onDelete: any}> = ({onDelete}) => {
     }
     useOnClickOutside(deleteRef, cancelDelete)
     return <button ref={deleteRef} onClick={handleDelete} className={
-        classNames("group-hover:mr-0 overflow-hidden w-0 h-0 group-hover:h-auto group-hover:w-auto transition bg-opacity-50 duration-200 mr-[-45px] text-xs font-normal text-gray-400 hover:text-red-500 group-hover:p-1 rounded-md", {
+        classNames("group-hover:h-auto group-hover:w-auto overflow-hidden transition bg-opacity-50 duration-200 text-xs font-normal text-gray-400 hover:text-red-500 rounded-md", {
             'flex-grow w-full bg-red-100 translate-x-0 text-red-500 border-red-500 border': deleting,
             // "group-hover:mr-0": !editing,
+            "group-hover:mr-0 mr-[-45px] w-0 h-0 group-hover:p-1": translate,
+            "p-1": !translate,
             'bg-mellow hover:bg-gray-200': !deleting
         })
     }>

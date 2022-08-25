@@ -210,10 +210,8 @@ class BoardController extends AbstractController
         if($board->getMembers()->contains($deletingUser)){
             $board->removeMember($deletingUser);
             $boardRepository->add($board, true);
-            return $this->redirect($request->headers->get('referer'));
         }else{
             $request->getSession()->set('errors', ['message' => 'invalid request']);
-            return $this->redirect($request->headers->get('referer'));
         }
         return $this->redirect($request->headers->get('referer'));
     }
