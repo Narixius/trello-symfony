@@ -33,10 +33,10 @@ class Card
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'cards')]
     private $assignees;
 
-    #[ORM\ManyToMany(targetEntity: Label::class, mappedBy: 'cards')]
+    #[ORM\ManyToMany(targetEntity: Label::class, inversedBy: 'cards')]
     private $labels;
 
-    #[ORM\OneToMany(mappedBy: 'cardId', targetEntity: Comment::class, orphanRemoval: true)]
+    #[ORM\OneToMany(mappedBy: 'card', targetEntity: Comment::class, orphanRemoval: true)]
     private $comments;
 
     #[ORM\Column(type: 'datetime_immutable')]
@@ -186,7 +186,7 @@ class Card
     {
         if (!$this->comments->contains($comment)) {
             $this->comments[] = $comment;
-            $comment->setCardId($this);
+            $comment->setCard($this);
         }
 
         return $this;
@@ -196,8 +196,8 @@ class Card
     {
         if ($this->comments->removeElement($comment)) {
             // set the owning side to null (unless already changed)
-            if ($comment->getCardId() === $this) {
-                $comment->setCardId(null);
+            if ($comment->getCard() === $this) {
+                $comment->setCard(null);
             }
         }
 

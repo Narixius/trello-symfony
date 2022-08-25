@@ -4,6 +4,9 @@ import { createRoot } from 'react-dom/client';
 import './tailwind.css'
 import './app.css'
 import { InertiaProgress } from '@inertiajs/progress'
+import * as dayjs from 'dayjs'
+import * as relativeTime from 'dayjs/plugin/relativeTime'
+dayjs.extend(relativeTime)
 
 InertiaProgress.init({
     showSpinner: true,

@@ -9,6 +9,7 @@ use App\Repository\CategoryRepository;
 use App\Services\ErrorGenerator;
 use Doctrine\ORM\EntityManagerInterface;
 use Rompetomp\InertiaBundle\Service\InertiaInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,6 +18,7 @@ use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[Route('/category')]
+#[IsGranted("ROLE_USER")]
 class CategoryController extends AbstractController
 {
     #[Route('/create', name: 'app_category_new', methods: ['POST'])]
@@ -34,6 +36,7 @@ class CategoryController extends AbstractController
             $request->getSession()->set('errors', $eg->fromValidation($errors));
         }
         else if($form->isValid()) {
+            $this->denyAccessUnlessGranted('BOARD_READ', $category->getBoard());
             $c = $categoryRepository->createQueryBuilder('c')
                 ->select('c.orderNumber')
                 ->where('c.board = :board_id')
@@ -49,34 +52,6 @@ class CategoryController extends AbstractController
         ]);
     }
 
-    #[Route('/reorder', name: 'app_category_reorder', methods: ['PATCH'])]
-    public function reorder(Request $request, EntityManagerInterface $em) {
-        $data = json_decode($request->getContent(), true);
-
-        $categoryRepository = $em->getRepository(Category::class);
-        $cardRepository = $em->getRepository(Card::class);
-
-        // $data = ["39-1", "23-2", "33-3"]
-        // each data contains {categoryId}-{order}
-        if(sizeof($data) > 0 ){
-            foreach($data["cards"] as $cardReorder){
-                $cardReorder = explode("-", $cardReorder);
-                $id = $cardReorder[0];
-                $categoryId = $cardReorder[1];
-                $orderNumber = $cardReorder[2];
-                $cardRepository->find($id)->setOrderNumber($orderNumber)->setCategory($categoryRepository->find($categoryId));
-            }
-            foreach($data["categories"] as $catReorder){
-                $catReorder = explode("-", $catReorder);
-                $id = $catReorder[0];
-                $orderNumber = $catReorder[1];
-                $categoryRepository->find($id)->setOrderNumber($orderNumber);
-            }
-        }
-        $em->flush();
-        return $this->redirect($request->headers->get('referer'));
-    }
-
     #[Route('/{id}', name: 'app_category_edit', methods: ['PATCH'])]
     public function edit(int $id, Request $request, ErrorGenerator $eg, CategoryRepository $categoryRepository, ValidatorInterface $validator): Response
     {
@@ -87,6 +62,7 @@ class CategoryController extends AbstractController
             $request->getSession()->set('errors', ['message' => 'Category not found!']);
             return $this->redirect($request->headers->get('referer'));
         }
+        $this->denyAccessUnlessGranted('BOARD_READ', $category->getBoard());
         $form = $this->createForm(CategoryType::class, $category);
         $form->handleRequest($request);
         $form->submit($data);
@@ -109,6 +85,7 @@ class CategoryController extends AbstractController
     public function delete(int $id, Request $request, Category $category, CategoryRepository $categoryRepository): Response
     {
         $category = $categoryRepository->find($id);
+        $this->denyAccessUnlessGranted('BOARD_READ', $category->getBoard());
         if(!$category) {
             $request->getSession()->set('errors', ['message' => 'Category not found!']);
             return $this->redirect($request->headers->get('referer'));

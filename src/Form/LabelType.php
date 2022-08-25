@@ -2,13 +2,12 @@
 
 namespace App\Form;
 
-use App\Entity\Card;
+use App\Entity\Label;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class CardType extends AbstractType
+class LabelType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -16,29 +15,22 @@ class CardType extends AbstractType
             ->add('title', options: [
                 'required' => false
             ])
-            ->add('category', options: [
+            ->add('board', options: [
                 'required' => false
             ])
-            ->add('description', options: [
+            ->add('cards', options: [
                 'required' => false
             ])
-            ->add('dueDate', DateTimeType::class, options: [
-                'required' => false,
-                'widget' => 'single_text',
-                'html5' => false
-            ])
-            ->add('assignees', options: [
+            ->add('color', options: [
                 'required' => false
             ])
-            ->add('labels', options: [
-                'required' => false
-            ]);
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Card::class,
+            'data_class' => Label::class,
         ]);
     }
 }

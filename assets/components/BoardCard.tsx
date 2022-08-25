@@ -3,14 +3,21 @@ import {PropsWithChildren, useEffect} from "react";
 import {Board} from "../types/Board";
 import Input, {ColorPicker} from "./Input";
 import Button from "./Button";
-import * as dayjs from 'dayjs'
-import * as relativeTime from 'dayjs/plugin/relativeTime'
 import {useOnClickOutside} from "../hooks/useClickOutside";
 import { useForm } from '@inertiajs/inertia-react'
 import classNames from "classnames";
 import {Inertia} from "@inertiajs/inertia";
+import * as dayjs from 'dayjs'
 
-dayjs.extend(relativeTime)
+export const COLORS = [
+    '#F8F7F8',
+    '#C0DEFF',
+    '#D6C0FF',
+    '#FFC0EF',
+    '#FFBFBF',
+    '#FFE6BF',
+    '#E9FFBF'
+];
 
 export const BoardCard:React.FC<PropsWithChildren<{
     board: Board
@@ -109,10 +116,8 @@ export const BoardCard:React.FC<PropsWithChildren<{
         </div>
         </>
         :   <div onClick={e=>{
-                console.log('asdf')
                 e.preventDefault()
-                }
-            }>
+            }}>
                 <BoardCardForm
                     title={"Create new board"}
                     formRef={editRef}
@@ -215,15 +220,7 @@ const BoardCardForm:React.FC<any> = ({
             e=>e.target.focus()
         } small name={"title"} placeholder={"Title"} value={data.title} onChange={(e:any) => setData('title', e.target.value)} />
         <div className="flex space-x-2 w-full">
-            <ColorPicker colors={[
-                '#F8F7F8',
-                '#C0DEFF',
-                '#D6C0FF',
-                '#FFC0EF',
-                '#FFBFBF',
-                '#FFE6BF',
-                '#E9FFBF'
-            ]} color={data.color} onChange={(color) => setData('color', color)} />
+            <ColorPicker colors={COLORS} color={data.color} onChange={(color) => setData('color', color)} />
             <Button small onClick={onSubmit} className={"px-6"} disabled={processing}>{processing ? loadingMessage : submitMessage}</Button>
         </div>
     </form>

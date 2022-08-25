@@ -5,6 +5,7 @@ import Input from "./Input";
 import classNames from "classnames";
 
 export const Editable:React.FC<{
+    textarea?: boolean,
     onSubmit: (value: string) => void,
     className?: string,
     error?: string,
@@ -16,6 +17,7 @@ export const Editable:React.FC<{
     onEditing?: (editing:boolean) => void
 }> = (props) => {
     const {
+        textarea = false,
         className,
         error,
         placeholder,
@@ -31,8 +33,9 @@ export const Editable:React.FC<{
     const [value, setValue] = useState(rest.value || '')
     const ref = useRef() as React.MutableRefObject<HTMLFormElement>;
 
-    const handleForm = (e:any) => {
-        e.preventDefault()
+    const handleForm = (e?:any) => {
+        if(e)
+            e.preventDefault()
         onSubmit(value)
         cancelEditing()
     }
@@ -57,9 +60,18 @@ export const Editable:React.FC<{
         return <span onClick={enableEditing} className={classNames("block cursor-text w-full", textClasses)}>{children}</span>
     else
         return <form ref={ref} onSubmit={handleForm} className={classNames("w-full", className)}>
-            <Input error={error} small value={value} autoFocus
-                   placeholder={placeholder}
-                   onChange={e=>setValue(e.target.value)}
-                   className={classNames("", inputClasses)} />
+            {!textarea ? <Input error={error} small value={value} autoFocus
+                    placeholder={placeholder}
+                    onChange={e => setValue(e.target.value)}
+                    className={classNames("", inputClasses)}/>
+            : <textarea value={value} autoFocus
+                        placeholder={placeholder}
+                        onChange={e => setValue(e.target.value)}
+                        className={classNames("", inputClasses)}
+                        onKeyUp={e=>{
+                            if(e.which === 13 && e.shiftKey){
+                                handleForm()
+                            }
+                        }} />}
         </form>
 }

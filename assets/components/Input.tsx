@@ -17,9 +17,10 @@ export default function Input({
             type={type}
             {...rest}
             className={classNames(rest.className,
-                'bg-mellow text-[#74747F] hover:bg-mellow-darker focus:bg-white border border-black hover:border-opacity-30 border-opacity-20 focus:border-opacity-30 ' +
+                'bg-mellow text-[#74747F] hover:bg-mellow-darker focus:bg-white border focus:border-opacity-30 ' +
                 'rounded-md transition-all outline-transparent ' +
-                'focus-visible:outline-[#7C95BE] w-full',{
+                'focus-visible:outline-[#7C95BE] w-full', {
+                    'border-black hover:border-opacity-30 border-opacity-20': !error,
                     "border-red-500 hover:border-red-500": error,
                     'text-sm h-[30px]': small,
                     'h-[42px]': !small,

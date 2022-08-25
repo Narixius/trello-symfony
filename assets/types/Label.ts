@@ -1,7 +1,7 @@
 import {WithBlameable, WithTimestamps} from "./index";
 
 export type Label = WithTimestamps<WithBlameable<{
-    id: string;
+    id: number;
     title: string;
     color: string;
 }>>

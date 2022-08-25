@@ -19,7 +19,7 @@ class Comment
     private $text;
 
     #[ORM\ManyToOne(targetEntity: Card::class, inversedBy: 'comments')]
-    private $cardId;
+    private $card;
 
     #[ORM\Column(type: 'datetime_immutable')]
     #[Gedmo\Timestampable(on: 'create')]
@@ -58,14 +58,14 @@ class Comment
         return $this;
     }
 
-    public function getCardId(): ?Card
+    public function getCard(): ?Card
     {
-        return $this->cardId;
+        return $this->card;
     }
 
-    public function setCardId(?Card $cardId): self
+    public function setCard(?Card $card): self
     {
-        $this->cardId = $cardId;
+        $this->card = $card;
 
         return $this;
     }

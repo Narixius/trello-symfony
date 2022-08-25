@@ -14,13 +14,17 @@ import {
 } from "@dnd-kit/sortable";
 import {CSS} from '@dnd-kit/utilities';
 import {Card as CardType} from "../types/Card";
-import {AddCard, Card} from "./Card";
+import {AddCard, Card, CardEdit} from "./Card";
+import {createPortal} from "react-dom";
+import {DragOverlay} from "@dnd-kit/core";
+import {DeleteButton} from "./Button";
+import {User} from "../types/User";
 
 export const animateLayoutChanges: AnimateLayoutChanges = (args) =>
     defaultAnimateLayoutChanges({...args});
 
 
-export const Category:React.FC<{category: CategoryType, board: Board, cards: CardType[]}> = ({category, board, cards}) => {
+export const Category:React.FC<{category: CategoryType, board: Board, cards: CardType[], user:User}> = ({category, board, cards, user}) => {
     const {
         attributes,
         listeners,
@@ -42,27 +46,16 @@ export const Category:React.FC<{category: CategoryType, board: Board, cards: Car
     };
     const {data, setData, patch, errors} = useForm({title: '', board: board.id})
     const [editing, setEditing] = useState(false)
-    const [deleting, setDeleting] = useState(false)
-    const deleteRef = useRef() as React.MutableRefObject<HTMLButtonElement>;
     const didMount = useRef(false);
     const onEditCategory = (value: string) => {
         setData('title', value)
     }
     const handleDelete = () => {
-        if(!deleting){
-            setDeleting(true)
-        }else{
-            Inertia.delete('/category/'+category.id)
-        }
-    }
-    const cancelDelete = () => {
-        if(deleting)
-            setDeleting(false)
+        Inertia.delete('/category/'+category.id)
     }
     const handleEditingChanges = (editing:any) => {
         setEditing(editing)
     }
-    useOnClickOutside(deleteRef, cancelDelete)
     useEffect((): any =>{
         if(!didMount.current) {
             didMount.current = true
@@ -86,23 +79,9 @@ export const Category:React.FC<{category: CategoryType, board: Board, cards: Car
                     </svg>
                 </button>
                 <Editable onEditing={handleEditingChanges} error={errors.title} value={category.title} onSubmit={onEditCategory} inputClasses="flex-grow" textClasses="w-full py-1 font-bold flex-grow truncate max-w-[245px]" placeholder="Category title...">{category.title}</Editable>
-                <button ref={deleteRef} onClick={handleDelete} className={
-                    classNames("transition-all bg-opacity-50 duration-200 mr-[-45px] text-xs font-normal text-gray-400 hover:text-red-500 p-1 rounded-md", {
-                        'flex-grow w-full bg-red-100 translate-x-0 text-red-500 border-red-500 border': deleting,
-                        "group-hover:mr-0": !editing,
-                        'bg-mellow hover:bg-gray-200': !deleting
-                    })
-                }>
-                    {
-                        !deleting ?
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                            </svg>
-                        : "Are you sure?"
-                    }
-                </button>
+                <DeleteButton onDelete={handleDelete} />
             </div>
-            <CategoryBody board={board} category={category} cards={cards} />
+            <CategoryBody board={board} category={category} cards={cards} user={user}/>
         </div>
     </div>
 }
@@ -135,21 +114,40 @@ export const AddCategory:React.FC<{board: Board}> = ({board}) => {
 
 }
 
-export const CategoryBody:React.FC<{cards: CardType[], category: CategoryType, board:Board}> = ({category, board, cards
+export const CategoryBody:React.FC<{cards: CardType[], category: CategoryType, board:Board, user: User}> = ({category, board, cards,user
     }) => {
     cards = Array.isArray(cards) ? cards.filter(c => c) : []
+    const [editingCard, setEditingCard] = useState<CardType>();
+    const openEditModal = (card:CardType)=>{
+        setEditingCard(card)
+    }
+    const closeModal = () => {
+        setEditingCard(undefined)
+    }
+    useEffect(()=>{
+        if(editingCard !== undefined){
+            const c = cards.find(c => c.id === editingCard.id)
+            if(c)
+                setEditingCard(c)
+        }
+    }, [cards])
     return(
         <SortableContext strategy={verticalListSortingStrategy} items={cards.filter(c => c).map(c=>c.id)}>
             <div className="flex justify-start items-center text-gray-500 flex-col w-full">
                 <div className="w-full flex flex-col">
                     {
                         cards.map((card)=>{
-                            return <Card card={card} category={category} key={card.id} />
+                            return <Card card={card} category={category} key={card.id} onClick={()=>openEditModal(card)} />
                         })
                     }
                 </div>
                 <AddCard category={category} />
             </div>
+
+            {editingCard && createPortal(
+                <CardEdit card={editingCard!} onClose={closeModal} board={board} user={user} />,
+                document.body
+            )}
         </SortableContext>
     )
 }

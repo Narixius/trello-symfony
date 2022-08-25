@@ -1,11 +1,14 @@
 import * as React from 'react'
 import classNames from "classnames";
+import {Inertia} from "@inertiajs/inertia";
+import {useOnClickOutside} from "../hooks/useClickOutside";
+import {FC, useRef, useState} from "react";
 
 export default function Button({
-                                    small= false,
-                                    outline = false,
-                                    danger=false,
-                                   ...rest
+        small= false,
+        outline = false,
+        danger=false,
+       ...rest
       }) {
     return <button
         {...rest}
@@ -20,4 +23,36 @@ export default function Button({
                 "bg-red-400 hover:bg-red-400 text-[#fff]": !outline && danger,
             })}
     />
+}
+
+export const DeleteButton:FC<{onDelete: any}> = ({onDelete}) => {
+    const [deleting, setDeleting] = useState(false)
+    const deleteRef = useRef() as React.MutableRefObject<HTMLButtonElement>;
+    const handleDelete = () => {
+        if(!deleting){
+            setDeleting(true)
+        }else{
+            onDelete()
+        }
+    }
+    const cancelDelete = () => {
+        if(deleting)
+            setDeleting(false)
+    }
+    useOnClickOutside(deleteRef, cancelDelete)
+    return <button ref={deleteRef} onClick={handleDelete} className={
+        classNames("group-hover:mr-0 overflow-hidden w-0 h-0 group-hover:h-auto group-hover:w-auto transition bg-opacity-50 duration-200 mr-[-45px] text-xs font-normal text-gray-400 hover:text-red-500 group-hover:p-1 rounded-md", {
+            'flex-grow w-full bg-red-100 translate-x-0 text-red-500 border-red-500 border': deleting,
+            // "group-hover:mr-0": !editing,
+            'bg-mellow hover:bg-gray-200': !deleting
+        })
+    }>
+        {
+            !deleting ?
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+                : "Are you sure?"
+        }
+    </button>
 }

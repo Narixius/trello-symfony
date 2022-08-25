@@ -8,7 +8,7 @@ export const Navbar:React.FC<{
     user
 }) => {
     return (
-        <div className="flex justify-between absolute top-0 w-full mt-5 right-1 -z-10 ">
+        <div className="flex justify-between absolute top-0 w-full mt-5 right-1">
             <div></div>
             <button role="presentation" className="relative group">
                 <div role="presentation" className="group-focus-within:outline outline-primary flex items-center justify-end cursor-pointer px-3 py-1 space-x-1 text-gray-500 hover:text-gray-600 border border-transparent hover:border-mellow-darker hover:bg-mellow rounded-md">
@@ -18,7 +18,7 @@ export const Navbar:React.FC<{
                     </svg>
                 </div>
 
-                <ul className="bg-white select-none group-focus-within:select-auto transition-all opacity-0 group-focus-within:opacity-100 absolute -z-10 bottom-1 w-full transform translate-y-10 group-focus-within:translate-y-12 p-1 rounded-md border border-mellow-darker">
+                <ul className="bg-white select-none group-focus-within:select-auto transition-all opacity-0 group-focus-within:opacity-100 absolute z-10 bottom-1 w-full transform translate-y-10 group-focus-within:translate-y-12 p-1 rounded-md border border-mellow-darker">
                     <li className="py-1 text-sm hover:bg-mellow border border-transparent hover:border-mellow-darker rounded-md">
                         <Link href="/logout" method="get" headers={{
                             'Content-Type': 'text/plain'

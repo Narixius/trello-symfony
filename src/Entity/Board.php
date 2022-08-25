@@ -204,7 +204,7 @@ class Board
     {
         if (!$this->labels->contains($label)) {
             $this->labels[] = $label;
-            $label->setBoardId($this);
+            $label->setBoard($this);
         }
 
         return $this;
@@ -214,8 +214,8 @@ class Board
     {
         if ($this->labels->removeElement($label)) {
             // set the owning side to null (unless already changed)
-            if ($label->getBoardId() === $this) {
-                $label->setBoardId(null);
+            if ($label->getBoard() === $this) {
+                $label->setBoard(null);
             }
         }
 

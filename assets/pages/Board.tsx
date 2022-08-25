@@ -9,7 +9,7 @@ import {AddCategory, Category} from "../components/Category";
 import {
     closestCenter,
     CollisionDetection, defaultDropAnimationSideEffects,
-    DndContext, DragOverlay, DropAnimation, getFirstCollision, MeasuringStrategy, MouseSensor,
+    DndContext, DragOverlay, DropAnimation, getFirstCollision, MeasuringStrategy, MouseSensor, PointerSensor,
     pointerWithin, rectIntersection, TouchSensor,
     UniqueIdentifier, useSensor, useSensors,
 } from '@dnd-kit/core';
@@ -20,6 +20,8 @@ import {Card as CardType} from "../types/Card";
 import {createPortal} from "react-dom";
 import {Card} from "../components/Card";
 import {Inertia} from "@inertiajs/inertia";
+import Button from "../components/Button";
+import {ManageBoard} from "../components/ManageBoard";
 
 const dropAnimation: DropAnimation = {
     sideEffects: defaultDropAnimationSideEffects({
@@ -60,7 +62,13 @@ export default function Dashboard(props:{
     const {board, user} = props
     const [categories, setCategories] = useState(initializeCategories(board.categories))
     const [items, setItems] = useState(initializeItems(categories))
-
+    const [isManageBoardOpen, setOpenManageBoard] = useState(false)
+    const openManageBoard = () => {
+        setOpenManageBoard(true)
+    }
+    const closeManageBoard = () => {
+        setOpenManageBoard(false)
+    }
     useEffect(()=>{
         setItems(initializeItems(categories))
     }, [categories])
@@ -83,7 +91,7 @@ export default function Dashboard(props:{
             })
         }).flat()
         if(cards.length > 0 || categories.length > 0)
-            Inertia.patch('/category/reorder', {
+            Inertia.patch('/board/'+board.id+'/reorder', {
                 cards: cards.map(card => `${card.id}-${card.category}-${card.orderNumber}`),
                 categories: categories.map(cat => `${cat.id}-${cat.orderNumber}`)
             });
@@ -93,6 +101,11 @@ export default function Dashboard(props:{
     const lastOverId = useRef<UniqueIdentifier | null>(null);
     const recentlyMovedToNewContainer = useRef(false);
     const sensors = useSensors(
+        useSensor(PointerSensor, {
+            activationConstraint: {
+                distance: 10
+            }
+        }),
         useSensor(MouseSensor),
         useSensor(TouchSensor),
     );
@@ -174,8 +187,21 @@ export default function Dashboard(props:{
           <Container className="pt-4 min-h-screen flex flex-col">
               <Navbar user={user} />
               <div className={"flex space-x-2 items-center  mt-1"}>
-                  <Logo className={"w-7 h-7"} />
-                  <h1 className={"text-2xl font-medium"}>{board.title}</h1>
+                  <Logo className={"w-7 h-7 z-10 relative"} />
+                  <h1 className={"text-2xl font-medium z-10 relative"}>{board.title}</h1>
+                  {
+                      user.id == board.createdBy.id && (
+                          <div className="z-10 relative">
+                              <button onClick={openManageBoard} className="transition border border-gray-400 text-gray-500 px-2 py-1 text-sm rounded-md ml-6 hover:bg-gray-100 hover:text-gray-700">Manage Board</button>
+                          </div>
+                      )
+                  }
+                  { isManageBoardOpen &&
+                      createPortal(
+                          <ManageBoard board={board} onClose={closeManageBoard} currentUser={user}/>,
+                          document.body
+                      )
+                  }
               </div>
               <div className="flex space-x-4 flex-nowrap mt-8 overflow-x-auto flex-grow">
                   <DndContext
@@ -306,7 +332,7 @@ export default function Dashboard(props:{
                           {
                               categories.map((category)=>{
                                   const categoryKey ='category-'+category.id
-                                  return <Category key={categoryKey} category={category} board={board} cards={items[categoryKey]} />
+                                  return <Category key={categoryKey} category={category} board={board} cards={items[categoryKey]} user={user} />
                               })
                           }
                       </SortableContext>
@@ -314,7 +340,7 @@ export default function Dashboard(props:{
                           <DragOverlay dropAnimation={dropAnimation}>
                               {activeId
                                   ? activeId in items
-                                      ? <Category key={activeId} category={findCategory(String(activeId))} board={board} cards={items[activeId]} />
+                                      ? <Category key={activeId} category={findCategory(String(activeId))} board={board} cards={items[activeId]} user={user} />
                                       : <Card overlay card={items[findContainer(String(activeId))].find(card => card.id == activeId)!} category={findCategory(findContainer(String(activeId)))} key={activeId} />
                                   : null}
                           </DragOverlay>,
