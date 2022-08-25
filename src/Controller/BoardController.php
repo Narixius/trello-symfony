@@ -46,7 +46,7 @@ class BoardController extends AbstractController
         return $this->redirect($request->headers->get('referer'));
     }
 
-    #[Route('/{id}', name: 'app_board_get', methods: ['GET'])]
+    #[Route('/{id}/', name: 'app_board_get', methods: ['GET'])]
     #[IsGranted('BOARD_READ', subject: 'board')]
     public function getBoard(Request $request, InertiaInterface $inertia, Board $board, Security $security) {
         $errors = $request->getSession()->get('errors');
@@ -93,7 +93,7 @@ class BoardController extends AbstractController
         return $this->redirect($request->headers->get('referer'));
     }
 
-    #[Route('/{id}', name: 'app_board_edit', methods: ['PATCH'])]
+    #[Route('/{id}/', name: 'app_board_edit', methods: ['PATCH'])]
     #[IsGranted('BOARD_READ', subject: 'board')]
     public function edit(int $id, Request $request, ErrorGenerator $eg, Board $board, BoardRepository $boardRepository, ValidatorInterface $validator): Response
     {
@@ -123,7 +123,7 @@ class BoardController extends AbstractController
         return $this->redirect($request->headers->get('referer'));
     }
 
-    #[Route('/{id}', name: 'app_board_delete', methods: ['DELETE'])]
+    #[Route('/{id}/', name: 'app_board_delete', methods: ['DELETE'])]
     #[IsGranted('BOARD_MANAGE', subject: 'board')]
     public function delete(Request $request, Board $board, BoardRepository $boardRepository): Response
     {
