@@ -19,10 +19,12 @@ class Board
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Assert\NotBlank]
+    #[Assert\NotBlank(message: "not_blank")]
+    #[Assert\Length(max: 255, maxMessage: "max_255")]
     private $title;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Assert\Length(max: 255, maxMessage: "max_255")]
     private $color;
 
     #[ORM\OneToMany(mappedBy: 'board', targetEntity: Category::class, orphanRemoval: true)]

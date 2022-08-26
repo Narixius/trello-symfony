@@ -23,6 +23,8 @@ class AccessDeniedListener implements EventSubscriberInterface
 
     public function onKernelException(ExceptionEvent $event): void
     {
+
+        return;
         $status = 404;
 
         $event->setResponse($this->inertia->render('Error', ['status' => $status])->setStatusCode($status));

@@ -62,6 +62,7 @@ class CardController extends AbstractController
         $this->denyAccessUnlessGranted('BOARD_READ', $card->getCategory()->getBoard());
         $form = $this->createForm(CardType::class, $card);
         $form->handleRequest($request);
+
         $form->submit([
             'title' => isset($data['title']) ? $data['title'] : $card->getTitle(),
             'description' => isset($data['description']) ? $data['description'] : $card->getDescription(),

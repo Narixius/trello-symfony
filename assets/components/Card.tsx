@@ -15,6 +15,7 @@ import classNames from "classnames";
 import {DeleteButton} from "./Button";
 import {User} from "../types/User";
 import {COLORS} from "./BoardCard";
+import {Messages} from "../messages";
 
 
 export const Card:React.FC<{card:CardType, category: CategoryType, overlay?: boolean, onClick?: any}> = ({card, category, overlay = false, onClick}) => {
@@ -51,7 +52,7 @@ export const Card:React.FC<{card:CardType, category: CategoryType, overlay?: boo
 
 export const AddCard:React.FC<{category: CategoryType}> = ({category}) => {
     const createCard = (title:string) => {
-        Inertia.post('/card/create', {
+        Inertia.post( Messages.locale + '/card/create', {
             title,
             category: category.id
         })
@@ -60,7 +61,7 @@ export const AddCard:React.FC<{category: CategoryType}> = ({category}) => {
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4">
             <path fillRule="evenodd" d="M10.75 2.75a.75.75 0 00-1.5 0v6.5h-6.5a.75.75 0 000 1.5h6.5v6.5a.75.75 0 001.5 0v-6.5h6.5a.75.75 0 000-1.5h-6.5v-6.5z" clipRule="evenodd" />
         </svg>
-        <span>Add a card...</span>
+        <span>{Messages.trans("Add a card")}...</span>
     </Editable>
 }
 
@@ -72,20 +73,20 @@ export const CardEdit:React.FC<{card:CardType, onClose: any,  board:Board, user:
     }
     const submitChanges = (key:string) => (value?:string | number[]) => {
         if(value)
-            Inertia.patch("/card/"+card.id, {
+            Inertia.patch( Messages.locale + "/card/"+card.id, {
                 [key]: value!
             })
     }
     const addComment = (text:string) => {
         if(text && text.length)
-            Inertia.post("/comment/create", {
+            Inertia.post( Messages.locale + "/comment/create", {
                 text,
                 card: card.id
             })
     }
     const addLabel = (title:string) => {
         if(title && title.length) {
-            Inertia.post("/label/create", {
+            Inertia.post( Messages.locale + "/label/create", {
                 title,
                 color: COLORS[Math.floor(Math.random() * COLORS.length)],
                 board: board.id,
@@ -94,13 +95,13 @@ export const CardEdit:React.FC<{card:CardType, onClose: any,  board:Board, user:
         }
     }
     const deleteComment = (commentId:number) => {
-        Inertia.delete("/comment/"+commentId)
+        Inertia.delete( Messages.locale + "/comment/"+commentId)
     }
     const deleteLabel = (labelId:number) => {
-        Inertia.delete("/label/"+labelId)
+        Inertia.delete( Messages.locale + "/label/"+labelId)
     }
     const deleteCard = () => {
-        Inertia.delete("/card/"+card.id)
+        Inertia.delete(Messages.locale + "/card/"+card.id)
     }
 
     if(!Array.isArray(card.comments))
@@ -133,18 +134,18 @@ export const CardEdit:React.FC<{card:CardType, onClose: any,  board:Board, user:
                 </div>
             </div>
             <div className="text-gray-500 text-xs mb-4">
-                <span>Last updated {dayjs().from(dayjs(card.updatedAt))}, created by {card.createdBy.firstName + " " + card.createdBy.lastName}, {dayjs().from(dayjs(card.createdAt))}</span>
+                <span>{Messages.trans("Last update")} {dayjs().from(dayjs(card.updatedAt))}, {Messages.trans("created by")} {card.createdBy.firstName + " " + card.createdBy.lastName}, {dayjs().from(dayjs(card.createdAt))}</span>
             </div>
             <div className="grid grid-cols-4 mt-8 gap-4">
                 <div className="col-span-3">
                     <div className="mb-3">
-                        <span className="text-gray-500 text-sm mb-2 block">Description</span>
+                        <span className="text-gray-500 text-sm mb-2 block">{Messages.trans("Description")}</span>
                         <Editable textarea inputClasses={"w-full p-2 text-sm"} value={card.description} onSubmit={submitChanges('description')} textClasses={"min-h-[30px] text-sm text-gray-700"}>
-                            <p className="whitespace-pre-wrap">{(!card.description || card.description.length === 0) ? "Click to add description..." : card.description}</p>
+                            <p className="whitespace-pre-wrap">{(!card.description || card.description.length === 0) ? Messages.trans("Click to add description...") : card.description}</p>
                         </Editable>
                     </div>
                     <div className="mb-3 mt-8">
-                        <span className="text-gray-500 text-sm mb-2 block">Comments</span>
+                        <span className="text-gray-500 text-sm mb-2 block">{Messages.trans("Comments")}</span>
                         <div className="flex flex-col space-y-2">
                             {
                                 card.comments.map((comment)=>{
@@ -167,13 +168,13 @@ export const CardEdit:React.FC<{card:CardType, onClose: any,  board:Board, user:
                         </div>
                        <div className="mt-5 pl-1">
                            <Editable inputClasses={"w-full p-2 text-sm"} value={""} onSubmit={addComment} textClasses={"min-h-[30px] text-sm text-gray-700"}>
-                               <p className="whitespace-pre-wrap text-gray-400">Click to add comment...</p>
+                               <p className="whitespace-pre-wrap text-gray-400">{Messages.trans("Click to add comment...")}</p>
                            </Editable>
                        </div>
                     </div>
                 </div>
                 <div className="col-span-1">
-                    <span className="text-gray-500 text-sm mb-2 block">Options</span>
+                    <span className="text-gray-500 text-sm mb-2 block">{Messages.trans("Options")}</span>
                     <div className="flex flex-col space-y-2">
                         <div className="relative">
                             <button onClick={
@@ -183,7 +184,7 @@ export const CardEdit:React.FC<{card:CardType, onClose: any,  board:Board, user:
                                     datepickerRef.current.showPicker()
                                 }
                             } className="relative z-[2] bg-gray-200 px-2 py-1 w-full text-left text-gray-700 rounded-sm text-sm">
-                                <span className="block">Due Date</span>
+                                <span className="block">{Messages.trans("Due Date")}</span>
                                 {dueDate && <span className="font-medium">{dueDate.format("YYYY-MM-DD hh:mm")}</span> }
                             </button>
                             <input onBlur={()=>submitChanges('dueDate')(dayjs(dueDate).toISOString())} className="focus:outline-none h-[20px] left-0 bottom-[2px] absolute z-[1] w-1" ref={datepickerRef} type={"datetime-local"} onChange={handleDateChange} />
@@ -191,7 +192,7 @@ export const CardEdit:React.FC<{card:CardType, onClose: any,  board:Board, user:
 
                         <div className="relative">
                             <div className="relative z-[2] bg-gray-200 px-2 py-1 w-full text-left text-gray-700 rounded-sm text-sm">
-                                <span className="block mb-1">Labels</span>
+                                <span className="block mb-1">{Messages.trans("Labels")}</span>
                                 <div className="flex flex-wrap gap-1 mb-2">
                                     {
                                         board.labels.map((label) => {
@@ -218,14 +219,14 @@ export const CardEdit:React.FC<{card:CardType, onClose: any,  board:Board, user:
                                     }
                                 </div>
                                 <Editable value={""} onSubmit={addLabel} placeholder="Label name" textClasses="text-sm text-gray-400">
-                                    <span>Click to add label</span>
+                                    <span>{Messages.trans("Click to add label")}</span>
                                 </Editable>
                             </div>
                         </div>
 
                         <div className="relative">
                             <div className="relative z-[2] bg-gray-200 px-2 py-1 w-full text-left text-gray-700 rounded-sm text-sm">
-                                <span className="block mb-1">Assignees</span>
+                                <span className="block mb-1">{Messages.trans('Assignees')}</span>
                                 {
                                     board.members.map(user => {
                                         if(!Array.isArray(card.assignees))

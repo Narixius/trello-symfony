@@ -1,0 +1,54 @@
+"Bad credentials.": Schlechte Referenzen.
+"The presented password cannot be empty.": Das angezeigte Passwort darf nicht leer sein.
+"The presented password is invalid.": Das angezeigte Passwort ist ungültig.
+"Sign in": Anmelden
+"Email": Email
+"Password": Passwort
+"Login": Einloggen
+"Don't have an account?": Sie haben kein Konto?
+"Create new account": Neues Konto erstellen
+"Registration": Anmeldung
+"First name": Vorname
+"Last name": Nachname
+"Register": Registrieren
+"Already have an account?": Sie haben bereits ein Konto?
+"Boards": "Bretter"
+"Cancel": "Absagen"
+"Delete": "Löschen"
+"Create new board": "Neues Board erstellen"
+Save: "Speichern"
+Saving: "Speichern..."
+"Add new board": "Neues Board hinzufügen"
+"Create": "Schaffen"
+"Creating": "Erstellen..."
+Title: "Titel"
+Color: "Titel"
+Logout: "Ausloggen"
+"Edit board": "Board bearbeiten"
+"Manage Board": "Verwaltungsrat"
+"Invite new member": "Neues Mitglied einladen"
+"Member email": "Mitglieder-E-Mail"
+"Members": "Mitglieder"
+"Admin": "Administrator"
+"Are you sure?": "Bist du dir sicher?"
+"Invite": "Einladen"
+"Add a card": "Füge eine Karte hinzu"
+"Last update": "Letztes Update"
+"created by": "erstellt von"
+"Description": "Beschreibung"
+"Comments": "Kommentare"
+"Click to add description...": "Klicken, um Beschreibung hinzuzufügen..."
+"Click to add comment...": "Klicken Sie hier, um einen Kommentar hinzuzufügen..."
+"Options": "Optionen"
+"Due Date": "Geburtstermin"
+"Labels": "Etiketten"
+"Assignees": "Beauftragte"
+Click to add label: "Klicken Sie, um ein Etikett hinzuzufügen"
+Add a new category: "Fügen Sie eine neue Kategorie hinzu"
+not found: "Nicht gefunden!"
+no permission: "Sie haben keine Berechtigung"
+no email: "E-Mail ist nicht angegeben"
+no user: "Benutzer wird nicht bereitgestellt"
+User not found: "Benutzer nicht gefunden"
+user added before: "Dieser Benutzer wurde schon einmal hinzugefügt"
+invalid: "Ungültige Anfrage"

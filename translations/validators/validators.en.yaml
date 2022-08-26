@@ -1,0 +1,5 @@
+not_blank: This field cannot be blank!
+max_255: Maximum length is 255
+date_time: Date time is not valid
+min_1: Minimum length is 1 character
+email: Email should be valid

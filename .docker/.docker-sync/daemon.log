@@ -1,25 +1,0 @@
-          ok  Starting unison for sync symfony_dockerized_app_sync
-          ok  symfony_dockerized_app_sync container still running, restarting unison in container
-     command  docker exec symfony_dockerized_app_sync supervisorctl restart unison
-          ok  starting initial sync of symfony_dockerized_app_sync
-     command  docker inspect --format='{{(index (index .NetworkSettings.Ports "5000/tcp") 0).HostPort}}' symfony_dockerized_app_sync
-     command  unison -testserver "/Users/narixius/B Complex/Semester 8/WEB 2/trello/" "socket://127.0.0.1:59676"
-     command  docker inspect --format='{{(index (index .NetworkSettings.Ports "5000/tcp") 0).HostPort}}' symfony_dockerized_app_sync
-     command  unison -ignore='Name .docker' -ignore='Name .git' -ignore='Name var' -ignore='Name vendor' '/Users/narixius/B Complex/Semester 8/WEB 2/trello/' -auto -batch -prefer '/Users/narixius/B Complex/Semester 8/WEB 2/trello/' -copyonconflict socket://127.0.0.1:59676
-          ok  Synced /Users/narixius/B Complex/Semester 8/WEB 2/trello/
-      output  \ assets/controllers                    \ node_modules/postcss-merge-longhand/types/lib/getLastNode.d.ts                                                                
-     success  Unison server started
-     command  docker inspect --format='{{(index (index .NetworkSettings.Ports "5000/tcp") 0).HostPort}}' symfony_dockerized_app_sync
-     command  unison -ignore='Name .docker' -ignore='Name .git' -ignore='Name var' -ignore='Name vendor' '/Users/narixius/B Complex/Semester 8/WEB 2/trello/' -auto -batch -prefer '/Users/narixius/B Complex/Semester 8/WEB 2/trello/' -copyonconflict socket://127.0.0.1:59676
-          ok  Synced /Users/narixius/B Complex/Semester 8/WEB 2/trello/
-      output  - assets/controllers                    - node_modules/schema-utils/node_mod.../ajv/dist/vocabularies/applicator                                                                        
-     command  docker inspect --format='{{(index (index .NetworkSettings.Ports "5000/tcp") 0).HostPort}}' symfony_dockerized_app_sync
-     command  unison -ignore='Name .docker' -ignore='Name .git' -ignore='Name var' -ignore='Name vendor' '/Users/narixius/B Complex/Semester 8/WEB 2/trello/' -auto -batch -prefer '/Users/narixius/B Complex/Semester 8/WEB 2/trello/' -copyonconflict socket://127.0.0.1:59676 -repeat watch
-Unison 2.52.1 (ocaml 4.12.0): Contacting server...
-Connected [//2ef6739599d8//app_sync -> //narixius//Users/narixius/B Complex/Semester 8/WEB 2/trello]
- 
-Looking for changes
-  Waiting for changes from server
-Reconciling changes
-Nothing to do: replicas have not changed since last sync.
-Fatal error: Lost connection with the server

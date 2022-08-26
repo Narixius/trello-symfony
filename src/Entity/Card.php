@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CardRepository::class)]
 #[Gedmo\SoftDeleteable(fieldName: 'deletedAt', timeAware: false, hardDelete: true)]
@@ -18,12 +19,16 @@ class Card
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
+    #[Assert\NotBlank(message: "not_blank")]
+    #[Assert\Length(max: 255, maxMessage: "max_255")]
     private $title;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    #[Assert\Length(max: 255, maxMessage: "max_255")]
     private $description;
 
     #[ORM\Column(type: 'datetime', nullable: true)]
+    #[Assert\DateTime(message: "date_time")]
     private $dueDate;
 
     #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'cards')]

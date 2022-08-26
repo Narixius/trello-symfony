@@ -1,3 +1,11 @@
 controllers:
     resource: ../src/Controller/
     type: attribute
+    prefix:
+        en: ''
+        'de': '/{_locale}/'
+    requirements:
+        _locale: '%app.locales%'
+    defaults:
+        _locale: '%locale%'
+    trailing_slash_on_root: false

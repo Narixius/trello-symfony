@@ -19,6 +19,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Yaml\Yaml;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[Route('/board')]
 #[IsGranted("ROLE_USER")]
@@ -46,14 +48,16 @@ class BoardController extends AbstractController
         return $this->redirect($request->headers->get('referer'));
     }
 
-    #[Route('/{id}/', name: 'app_board_get', methods: ['GET'])]
+    #[Route('/{id}', name: 'app_board_get', methods: ['GET'])]
     #[IsGranted('BOARD_READ', subject: 'board')]
-    public function getBoard(Request $request, InertiaInterface $inertia, Board $board, Security $security) {
+    public function getBoard(Request $request, InertiaInterface $inertia, Board $board, Security $security, TranslatorInterface $translator) {
         $errors = $request->getSession()->get('errors');
+        $inertia->share('messages', Yaml::parseFile(__DIR__.'/../../translations/messages.'.$translator->getLocale().".yaml"));
+        $inertia->share('locale', $translator->getLocale());
         if(!$board)
             return $inertia->render('Board', [
                 'error' => [
-                    'message' => 'Board not found'
+                    'message' => $translator->trans("not found")
                 ]
             ]);
         return $inertia->render('Board', [
@@ -93,15 +97,15 @@ class BoardController extends AbstractController
         return $this->redirect($request->headers->get('referer'));
     }
 
-    #[Route('/{id}/', name: 'app_board_edit', methods: ['PATCH'])]
+    #[Route('/{id}', name: 'app_board_edit', methods: ['PATCH'])]
     #[IsGranted('BOARD_READ', subject: 'board')]
-    public function edit(int $id, Request $request, ErrorGenerator $eg, Board $board, BoardRepository $boardRepository, ValidatorInterface $validator): Response
+    public function edit(int $id, Request $request, ErrorGenerator $eg, Board $board, BoardRepository $boardRepository, ValidatorInterface $validator, TranslatorInterface $translator): Response
     {
         $data = json_decode($request->getContent(), true);
         /** @var Board $board */
         $board = $boardRepository->find($id);
         if(!$board) {
-            $request->getSession()->set('errors', ['message' => 'Board not found!']);
+            $request->getSession()->set('errors', ['message' => $translator->trans("not found")]);
             return $this->redirect($request->headers->get('referer'));
         }
 
@@ -123,7 +127,7 @@ class BoardController extends AbstractController
         return $this->redirect($request->headers->get('referer'));
     }
 
-    #[Route('/{id}/', name: 'app_board_delete', methods: ['DELETE'])]
+    #[Route('/{id}', name: 'app_board_delete', methods: ['DELETE'])]
     #[IsGranted('BOARD_MANAGE', subject: 'board')]
     public function delete(Request $request, Board $board, BoardRepository $boardRepository): Response
     {
@@ -133,7 +137,7 @@ class BoardController extends AbstractController
 
     #[Route('/{id}/members', name: 'app_card_add_member', methods: ['POST'])]
     #[IsGranted('BOARD_MANAGE', subject: 'board')]
-    public function addMember(int $id, Board $board,Security $security, Request $request,UserRepository $userRepository, ErrorGenerator $eg, BoardRepository $boardRepository, ValidatorInterface $validator): Response
+    public function addMember(int $id, Board $board,Security $security, Request $request,UserRepository $userRepository, ErrorGenerator $eg, BoardRepository $boardRepository, ValidatorInterface $validator, TranslatorInterface $translator): Response
     {
         /** @var User $user */
         $user = $security->getUser();
@@ -142,18 +146,18 @@ class BoardController extends AbstractController
         /** @var Board $board */
         $board = $boardRepository->find($id);
         if(!$board) {
-            $request->getSession()->set('errors', ['message' => 'Board not found!']);
+            $request->getSession()->set('errors', ['message' => $translator->trans("not found")]);
             return $this->redirect($request->headers->get('referer'));
         }
 
         if($board->getCreatedBy()->getId() !== $user->getId()){
-            $request->getSession()->set('errors', ['message' => 'You do not have permission!']);
+            $request->getSession()->set('errors', ['message' => $translator->trans("no permission")]);
             return $this->redirect($request->headers->get('referer'));
         }
 
 
         if(!isset($data['email'])){
-            $request->getSession()->set('errors', ['email' => 'Email is not provided!']);
+            $request->getSession()->set('errors', ['email' => $translator->trans("no email")]);
             return $this->redirect($request->headers->get('referer'));
         }
 
@@ -162,12 +166,12 @@ class BoardController extends AbstractController
         ]);
 
         if(sizeof($users) == 0){
-            $request->getSession()->set('errors', ['email' => 'User is not joined with this email!']);
+            $request->getSession()->set('errors', ['email' => $translator->trans("User not found")]);
             return $this->redirect($request->headers->get('referer'));
         }
 
         if($board->getMembers()->contains($users[0])){
-            $request->getSession()->set('errors', ['email' => 'This user has been added before']);
+            $request->getSession()->set('errors', ['email' => $translator->trans("user added before")]);
             return $this->redirect($request->headers->get('referer'));
         }
 
@@ -178,7 +182,7 @@ class BoardController extends AbstractController
 
     #[Route('/{id}/members', name: 'app_card_delete_member', methods: ['DELETE'])]
     #[IsGranted('BOARD_MANAGE', subject: 'board')]
-    public function deleteMember(int $id,Board $board, Security $security, Request $request,UserRepository $userRepository, ErrorGenerator $eg, BoardRepository $boardRepository, ValidatorInterface $validator): Response
+    public function deleteMember(int $id,Board $board, Security $security, Request $request,UserRepository $userRepository, ErrorGenerator $eg, BoardRepository $boardRepository, ValidatorInterface $validator, TranslatorInterface $translator): Response
     {
         /** @var User $user */
         $user = $security->getUser();
@@ -187,23 +191,23 @@ class BoardController extends AbstractController
         /** @var Board $board */
         $board = $boardRepository->find($id);
         if(!$board) {
-            $request->getSession()->set('errors', ['message' => 'Board not found!']);
+            $request->getSession()->set('errors', ['message' => $translator->trans("not found")]);
             return $this->redirect($request->headers->get('referer'));
         }
 
         if($board->getCreatedBy()->getId() !== $user->getId()){
-            $request->getSession()->set('errors', ['message' => 'You do not have permission!']);
+            $request->getSession()->set('errors', ['message' => $translator->trans("no permission")]);
             return $this->redirect($request->headers->get('referer'));
         }
 
         if(!isset($data['user'])){
-            $request->getSession()->set('errors', ['message' => 'User is not provided!']);
+            $request->getSession()->set('errors', ['message' => $translator->trans("no user")]);
             return $this->redirect($request->headers->get('referer'));
         }
 
         $deletingUser = $userRepository->find($data['user']);
         if(!$deletingUser){
-            $request->getSession()->set('errors', ['message' => 'User not found!']);
+            $request->getSession()->set('errors', ['message' => $translator->trans("User not found")]);
             return $this->redirect($request->headers->get('referer'));
         }
 
@@ -211,7 +215,7 @@ class BoardController extends AbstractController
             $board->removeMember($deletingUser);
             $boardRepository->add($board, true);
         }else{
-            $request->getSession()->set('errors', ['message' => 'invalid request']);
+            $request->getSession()->set('errors', ['message' => $translator->trans("invalid")]);
         }
         return $this->redirect($request->headers->get('referer'));
     }

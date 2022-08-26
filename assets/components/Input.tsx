@@ -1,6 +1,7 @@
 import * as React from 'react'
 import classNames from "classnames";
 import {InputHTMLAttributes} from "react";
+import {Messages} from "../messages";
 
 export default function Input({
         type="input",
@@ -53,7 +54,7 @@ export const ColorPicker:React.FC<{
             <div className="w-full h-[30px] px-2 text-sm text-center flex items-center rounded-md" style={{
                 backgroundColor: color
             }} onClick={selectNext} >
-                <span>Color</span>
+                <span>{Messages.trans("Color")}</span>
             </div>
     </div>
 }

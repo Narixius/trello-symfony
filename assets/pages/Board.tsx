@@ -22,6 +22,7 @@ import {Card} from "../components/Card";
 import {Inertia} from "@inertiajs/inertia";
 import Button from "../components/Button";
 import {ManageBoard} from "../components/ManageBoard";
+import {Messages} from "../messages";
 
 const dropAnimation: DropAnimation = {
     sideEffects: defaultDropAnimationSideEffects({
@@ -57,8 +58,12 @@ let dumpCats:CategoryType[] = [];
 export default function Dashboard(props:{
     board: Board,
     user: User,
-    errors: Errors
+    errors: Errors,
+    messages: Record<string, string>,
+    locale: string
 }) {
+    Messages.setMessages(props.messages)
+    Messages.setLocale(props.locale)
     const {board, user} = props
     const [categories, setCategories] = useState(initializeCategories(board.categories))
     const [items, setItems] = useState(initializeItems(categories))
@@ -91,7 +96,7 @@ export default function Dashboard(props:{
             })
         }).flat()
         if(cards.length > 0 || categories.length > 0)
-            Inertia.patch('/board/'+board.id+'/reorder', {
+            Inertia.patch(Messages.locale + '/board/'+board.id+'/reorder', {
                 cards: cards.map(card => `${card.id}-${card.category}-${card.orderNumber}`),
                 categories: categories.map(cat => `${cat.id}-${cat.orderNumber}`)
             });
@@ -192,7 +197,7 @@ export default function Dashboard(props:{
                   {
                       user.id == board.createdBy.id && (
                           <div className="z-10 relative">
-                              <button onClick={openManageBoard} className="transition border border-gray-400 text-gray-500 px-2 py-1 text-sm rounded-md ml-6 hover:bg-gray-100 hover:text-gray-700">Manage Board</button>
+                              <button onClick={openManageBoard} className="transition border border-gray-400 text-gray-500 px-2 py-1 text-sm rounded-md ml-6 hover:bg-gray-100 hover:text-gray-700">{Messages.trans("Manage Board")}</button>
                           </div>
                       )
                   }

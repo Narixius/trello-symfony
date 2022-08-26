@@ -20,7 +20,8 @@ class CardType extends AbstractType
                 'required' => false
             ])
             ->add('description', options: [
-                'required' => false
+                'required' => false,
+                'empty_data' => ''
             ])
             ->add('dueDate', DateTimeType::class, options: [
                 'required' => false,

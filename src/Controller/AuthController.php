@@ -15,18 +15,22 @@ use Rompetomp\InertiaBundle\Service\InertiaInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Yaml\Yaml;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class AuthController extends AbstractController
 {
     #[Route(path: '/login', name: 'app_login')]
-    public function login(InertiaInterface $inertia, Request $request, SecurityAuthenticator $authenticator): Response
+    public function login(InertiaInterface $inertia, Request $request, SecurityAuthenticator $authenticator, TranslatorInterface $translator): Response
     {
         $user = $this->getUser();
         if($user){
             return $this->redirectToRoute('app_dashboard');
         }
-
-        return $inertia->render('Login');
+        return $inertia->render('Login', [
+            'messages' => Yaml::parseFile(__DIR__.'/../../translations/messages.'.$translator->getLocale().".yaml"),
+            'locale' => $translator->getLocale()
+        ]);
     }
 
     #[Route(path: '/register', name: 'app_register')]
@@ -37,8 +41,11 @@ class AuthController extends AbstractController
                              InertiaInterface $inertia,
                              UserPasswordHasherInterface $passwordHasher,
                              UserAuthenticatorInterface $authenticator,
-                             SecurityAuthenticator $formAuthenticator): Response
+                             SecurityAuthenticator $formAuthenticator,
+                             TranslatorInterface $translator): Response
     {
+        $inertia->share('messages', Yaml::parseFile(__DIR__.'/../../translations/messages.'.$translator->getLocale().".yaml"));
+        $inertia->share('locale', $translator->getLocale());
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
@@ -48,7 +55,9 @@ class AuthController extends AbstractController
             $errors = $validator->validate($user);
             if (count($errors) > 0) {
 
-                return $inertia->render('Register', ['errors'=>$eg->fromValidation($errors)]);
+                return $inertia->render('Register', [
+                    'errors'=>$eg->fromValidation($errors)
+                ]);
             }
             if ($form->isSubmitted() && $form->isValid()) {
                 $user->setPassword($passwordHasher->hashPassword(

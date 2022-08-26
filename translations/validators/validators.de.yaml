@@ -1,0 +1,5 @@
+not_blank: Dieses Feld darf nicht leer sein!
+max_255: Die maximale Länge beträgt 255
+date_time: Datumszeit ist ungültig
+min_1: Mindestlänge ist 1 Zeichen
+email: Email sollte gültig sein

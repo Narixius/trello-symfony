@@ -16,7 +16,7 @@ use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 #[Route('/label')]
-#[IsGranted("ROLE_USER", statusCode: 404)]
+#[IsGranted("ROLE_USER")]
 class LabelController extends AbstractController
 {
     #[Route('/create', name: 'app_label_create')]

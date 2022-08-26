@@ -1,8 +1,12 @@
 import * as React from 'react';
 import {Container} from "../components/Container";
 import {Link} from "@inertiajs/inertia-react";
+import {Messages} from "../messages";
 
-export default function Error({status}:{status:number}) {
+export default function Error(props:any) {
+    const status = props.status;
+    Messages.setMessages(props.messages)
+    Messages.setLocale(props.locale)
     return <Container className="pt-4 min-h-screen flex flex-col">
         <h1>Error  {status}</h1>
 

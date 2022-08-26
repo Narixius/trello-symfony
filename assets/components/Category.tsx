@@ -19,6 +19,7 @@ import {createPortal} from "react-dom";
 import {DragOverlay} from "@dnd-kit/core";
 import {DeleteButton} from "./Button";
 import {User} from "../types/User";
+import {Messages} from "../messages";
 
 export const animateLayoutChanges: AnimateLayoutChanges = (args) =>
     defaultAnimateLayoutChanges({...args});
@@ -51,7 +52,7 @@ export const Category:React.FC<{category: CategoryType, board: Board, cards: Car
         setData('title', value)
     }
     const handleDelete = () => {
-        Inertia.delete('/category/'+category.id)
+        Inertia.delete(Messages.locale + '/category/'+category.id)
     }
     const handleEditingChanges = (editing:any) => {
         setEditing(editing)
@@ -60,7 +61,7 @@ export const Category:React.FC<{category: CategoryType, board: Board, cards: Car
         if(!didMount.current) {
             didMount.current = true
         }else {
-            patch('/category/' + category.id)
+            patch( Messages.locale + '/category/' + category.id)
         }
     }, [data])
     return <div
@@ -99,7 +100,7 @@ export const AddCategory:React.FC<{board: Board}> = ({board}) => {
         if(!didMount.current) {
             didMount.current = true
         }else if(isDirty){
-            post('/category/create')
+            post( Messages.locale + '/category/create')
             reset()
         }
     }, [data])
@@ -108,7 +109,7 @@ export const AddCategory:React.FC<{board: Board}> = ({board}) => {
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.4}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
             </svg>
-            <span className="block py-1">Add new category...</span>
+            <span className="block py-1">{Messages.trans("Add a new category")}...</span>
         </Editable>
     </div>
 

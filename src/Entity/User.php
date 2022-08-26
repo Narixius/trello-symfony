@@ -23,22 +23,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $id;
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
-    #[Assert\NotBlank]
-    #[Assert\Email]
+    #[Assert\NotBlank(message: 'not_blank')]
+    #[Assert\Email(message: "email")]
     private $email;
 
     #[ORM\Column(type: 'json')]
     private $roles = [];
 
     #[ORM\Column(type: 'string')]
-    #[Assert\NotBlank]
+    #[Assert\NotBlank(message: 'not_blank')]
     private $password;
 
     #[ORM\ManyToMany(targetEntity: Card::class, mappedBy: 'assignees')]
     private $cards;
 
     #[ORM\Column(type: 'string', length: 255)]
-    #[Assert\NotBlank]
+    #[Assert\NotBlank(message: 'not_blank')]
     private $firstName;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]

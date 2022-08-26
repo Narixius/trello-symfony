@@ -8,6 +8,7 @@ import { useForm } from '@inertiajs/inertia-react'
 import classNames from "classnames";
 import {Inertia} from "@inertiajs/inertia";
 import * as dayjs from 'dayjs'
+import {Messages} from "../messages";
 
 export const COLORS = [
     '#F8F7F8',
@@ -49,7 +50,7 @@ export const BoardCard:React.FC<PropsWithChildren<{
             e.preventDefault()
             e.stopPropagation()
         }
-        Inertia.delete('/board/'+board.id)
+        Inertia.delete( Messages.locale + '/board/'+board.id)
     }
     const handleEditing = (e?:any) => {
         if(e) {
@@ -68,7 +69,7 @@ export const BoardCard:React.FC<PropsWithChildren<{
     }
     const editBoard = (e: any) => {
         e.preventDefault();
-        patch('/board/'+board.id)
+        patch( Messages.locale + '/board/'+board.id)
     }
 
     useEffect(()=>{
@@ -110,8 +111,8 @@ export const BoardCard:React.FC<PropsWithChildren<{
                 "translate-y-[-28px]" : deleting,
                 "translate-y-[100px]": !deleting
             })}>
-                <Button outline small className="w-full" onClick={cancelDelete}>Cancel</Button>
-                <Button danger small className="w-full" onClick={deleteBoard}>Delete</Button>
+                <Button outline small className="w-full" onClick={cancelDelete}>{Messages.trans("Cancel")}</Button>
+                <Button danger small className="w-full" onClick={deleteBoard}>{Messages.trans("Delete")}</Button>
             </div>
         </div>
         </>
@@ -119,7 +120,7 @@ export const BoardCard:React.FC<PropsWithChildren<{
                 e.preventDefault()
             }}>
                 <BoardCardForm
-                    title={"Create new board"}
+                    title={Messages.trans("Edit board")}
                     formRef={editRef}
                     onSubmit={editBoard}
                     onCancel={cancelEditing}
@@ -127,8 +128,8 @@ export const BoardCard:React.FC<PropsWithChildren<{
                     data={data}
                     setData={setData}
                     processing={processing}
-                    loadingMessage={"Saving..."}
-                    submitMessage={"Save"} />
+                    loadingMessage={Messages.trans("Saving")}
+                    submitMessage={Messages.trans("Save")} />
             </div>
         }
     </div>
@@ -146,7 +147,7 @@ export const AddBoardCard:React.FC = () => {
     }
     const createBoard = (e:any) => {
         e.preventDefault();
-        post('/board/create')
+        post(Messages.locale +'/board/create')
     }
     const back = (e:any) => {
         if(e){
@@ -173,11 +174,11 @@ export const AddBoardCard:React.FC = () => {
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
             </svg>
-            <span>Add new board</span>
+            <span>{Messages.trans("Add new board")}</span>
         </>) : (
             <div className="px-4 w-full">
                 <BoardCardForm
-                    title={"Create new board"}
+                    title={Messages.trans("Create new board")}
                     formRef={formRef}
                     onSubmit={createBoard}
                     onCancel={back}
@@ -185,8 +186,8 @@ export const AddBoardCard:React.FC = () => {
                     data={data}
                     setData={setData}
                     processing={processing}
-                    loadingMessage={"Creating..."}
-                    submitMessage={"Create"}
+                    loadingMessage={Messages.trans("Creating")}
+                    submitMessage={Messages.trans("Create")}
                 />
             </div>
         )}
@@ -218,7 +219,7 @@ const BoardCardForm:React.FC<any> = ({
         <Input error={errors.title} onClick={
             // @ts-ignore
             e=>e.target.focus()
-        } small name={"title"} placeholder={"Title"} value={data.title} onChange={(e:any) => setData('title', e.target.value)} />
+        } small name={"title"} placeholder={Messages.trans("Title")} value={data.title} onChange={(e:any) => setData('title', e.target.value)} />
         <div className="flex space-x-2 w-full">
             <ColorPicker colors={COLORS} color={data.color} onChange={(color) => setData('color', color)} />
             <Button small onClick={onSubmit} className={"px-6"} disabled={processing}>{processing ? loadingMessage : submitMessage}</Button>
